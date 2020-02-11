@@ -15,23 +15,47 @@ app.use(function (req, res, next) {
 })
 
 
-function conexao() {
-    return mysql.createConnection({
-        host: 'us-cdbr-iron-east-04.cleardb.net',
-        port: '3306',
-        user: 'b12178564d0ebd',
-        password: 'a099b921',
-        database: 'heroku_d03b6e012609670'
+var db_config = {
+    host: 'us-cdbr-iron-east-04.cleardb.net',
+    port: '3306',
+    user: 'b12178564d0ebd',
+    password: 'a099b921',
+    database: 'heroku_d03b6e012609670'
+}
+var conexao
+
+connect = () => {
+
+    conexao = mysql.createConnection(db_config)
+
+    conexao.connect((err) => {
+        if (err) {
+            console.log('erro na conexão no banco');
+            setTimeout(() => {
+                connect()
+            }, 10);
+        }
+    })
+
+    conexao.on('error', (err) => {
+        console.log('db error', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            connect()
+        } else {
+            throw err
+        }
     })
 }
 
-app.listen(process.env.PORT, () => {
+connect();
+
+app.listen(process.env.PORT || 2222, () => {
     console.log('Servidor funcionando !')
 })
 
 app.get("/users", (req, res) => {
     const sql = "select * from users"
-    conexao().query(sql, (erro, ln, cl) => {
+    conexao.query(sql, (erro, ln, cl) => {
         res.json(ln)
     })
 })
@@ -42,7 +66,7 @@ app.post('/users', (req, res) => {
     var entrega = req.body.entrega
     var endereco = req.body.endereco
     const sql = "INSERT INTO users (name_user, qdt_marmita, entrega, endereco) VALUES ( ?, ?, ?, ?);"
-    conexao().query(sql, [name_user, qdt_marmita, entrega, endereco], (erro, result, fields) => {
+    conexao.query(sql, [name_user, qdt_marmita, entrega, endereco], (erro, result, fields) => {
         if (erro) {
             res.sendStatus(500)
             return
@@ -53,14 +77,14 @@ app.post('/users', (req, res) => {
 
 app.get("/entrega", (req, res) => {
     const sql = "select * from users where entrega = 'Entrega residêncial'"
-    conexao().query(sql, (erro, ln, cl) => {
+    conexao.query(sql, (erro, ln, cl) => {
         res.json(ln)
     })
 })
 
 app.get("/retirada", (req, res) => {
     const sql = "select * from users where entrega = 'Retirada igreja'"
-    conexao().query(sql, (erro, ln, cl) => {
+    conexao.query(sql, (erro, ln, cl) => {
         res.json(ln)
     })
 })
