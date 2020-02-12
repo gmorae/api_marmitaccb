@@ -89,9 +89,10 @@ app.get("/retirada", (req, res) => {
     })
 })
 
-app.delete('/users/:id', function(req, res) {
+app.delete('/users/:id', (req, res) => {
+    const id = req.params.id    
     const sql = 'DELETE FROM users WHERE idusers = ?'
-    conexao().query(sql, [req.params.id], function(err, results) {
+    conexao.query(sql, id, (err, results) => {
         if (err) throw err;
     });
     res.end()
