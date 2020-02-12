@@ -88,3 +88,11 @@ app.get("/retirada", (req, res) => {
         res.json(ln)
     })
 })
+
+app.delete('/users/:id', function(req, res) {
+    const sql = 'DELETE FROM users WHERE idusers = ?'
+    conexao().query(sql, [req.params.id], function(err, results) {
+        if (err) throw err;
+    });
+    res.end()
+});
