@@ -7,7 +7,8 @@ app.use(bodyParser())
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://marmitaccb.netlify.com/');
+    //res.header('Access-Control-Allow-Origin', 'https://marmitaccb.netlify.com/');
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATH, PUT, DELETE');
     res.header('Access-Control-Allow-Credentials', true);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -97,3 +98,48 @@ app.delete('/users/:id', (req, res) => {
     });
     res.end()
 });
+
+app.get("/users/entregue", (req, res) => {
+    const sql = "select * from entregas"
+    conexao.query(sql, (erro, ln, cl) => {
+        res.json(ln)
+    })
+})
+
+app.post('/users/entregue/:id', (req, res) => {
+    var id = req.params.id
+    const sql = "INSERT INTO entregas (id_ok) VALUES (?);"
+    conexao.query(sql, [id], (erro, result, fields) => {
+    })
+    res.end()
+})
+
+app.get("/doacao", (req, res) => {
+    const sql = "select * from doacao"
+    conexao.query(sql, (erro, ln, cl) => {
+        res.json(ln)
+    })
+})
+
+app.post('/doacao', (req, res) => {
+    var valor = req.body.valor
+    const sql = "INSERT INTO doacao (valor) VALUES (?);"
+    conexao.query(sql, [valor], (erro, result, fields) => {
+    })
+    res.end()
+})
+
+app.get("/users/entregue/motoboy", (req, res) => {
+    const sql = "select * from entregaMotoboy"
+    conexao.query(sql, (erro, ln, cl) => {
+        res.json(ln)
+    })
+})
+
+app.post('/users/entregue/motoboy/:id', (req, res) => {
+    var id = req.params.id
+    const sql = "INSERT INTO entregaMotoboy (id_ok) VALUES (?);"
+    conexao.query(sql, [id], (erro, result, fields) => {
+    })
+    res.end()
+})
