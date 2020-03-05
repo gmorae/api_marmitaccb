@@ -7,7 +7,7 @@ app.use(bodyParser())
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://marmitaccb.netlify.com/');
+    res.header('Access-Control-Allow-Origin', '*');
     //res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATH, PUT, DELETE');
     res.header('Access-Control-Allow-Credentials', true);
@@ -64,6 +64,7 @@ app.get("/users", (req, res) => {
         res.json({
             dados: {
                 totalMarmitas: marmita,
+                totalPedidos: marmita - marmitaAtual,
                 totalMarmitasAtual: marmitaAtual,
                 totalDinheiro: totalMoney
             },
