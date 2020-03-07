@@ -7,7 +7,7 @@ app.use(bodyParser())
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://marmitaccb.netlify.com/');
+    res.header('Access-Control-Allow-Origin', '*');
     //res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATH, PUT, DELETE');
     res.header('Access-Control-Allow-Credentials', true);
@@ -113,11 +113,14 @@ app.get("/relatorio", (req, res) => {
     const sql = "select * from users"
     conexao.query(sql, (erro, ln, cl) => {
         let resultMarmita = ln.reduce((t, v) => t + v.total, 0)
+        let retirada = ln.filter(obj => obj.entrega === 'Retirada igreja');
+        let entrega = ln.filter(obj => obj.entrega === 'Entrega residêncial');
         res.json({
             dados: {
                 totalMarmitas: resultMarmita,
+                totalEntrega: entrega.reduce((t, v) => t + v.total, 0 ),
+                totalRetirada: retirada.reduce((t, v) => t + v.total, 0)        
             },
-            data: ln
         })
     })
 })
