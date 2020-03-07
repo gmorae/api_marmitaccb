@@ -64,6 +64,7 @@ app.get("/users", (req, res) => {
         res.json({
             dados: {
                 totalMarmitas: marmita,
+                totalPedidos: marmita - marmitaAtual,
                 totalMarmitasAtual: marmitaAtual,
                 totalDinheiro: totalMoney
             },
