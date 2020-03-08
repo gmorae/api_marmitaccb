@@ -103,7 +103,7 @@ app.get("/retirada", (req, res) => {
 app.get("/doacao", (req, res) => {
     const sql = "select * from doacao"
     conexao.query(sql, (erro, ln, cl) => {
-        let doacao = ln.reduce((t, v) => t + v.valor, 0)
+        let doacao = ln.reduce((t, v) => t + +v.valor, 0)
         res.json({
             total: doacao
         })
@@ -126,6 +126,18 @@ app.get("/relatorio", (req, res) => {
     })
 })
 
+app.get('/sorteio', (req, res) => {
+    const sql = 'select * from users'
+    conexao.query(sql, (er, ln, cl) => {
+        maior = value => {
+            return value.qdt_marmita >= 3
+        }
+        let filtro = ln.filter(maior)
+        let i = 1
+        filtro.push(i)
+        res.json(filtro)
+    })
+})
 
 app.delete('/users/:id', (req, res) => {
     const id = req.params.id
